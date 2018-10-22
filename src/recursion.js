@@ -5,34 +5,159 @@
 // 1. Calculate the factorial of a number. The factorial of a non-negative integer n,
 // denoted by n!, is the product of all positive integers less than or equal to n.
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
-// factorial(5); // 120
+// factorial(5); // is 5 x factorial(4) --> 120
 var factorial = function(n) {
+  if (n < 0) { return null };
+  if (n === 1 || n === 0) { return 1 };
+  return n * factorial(n - 1);
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+  if (array.length === 0) {
+    return 0;
+  }
+  return sum(array.slice(1)) + array[0]; //return [what was previously returned] + array[0];
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  var sum = 0;
+  for (var element of array) {
+    if (Array.isArray(element) === true) {
+      sum += arraySum(element);
+    } else {
+      sum += element;
+    }
+  }
+  return sum;
 };
 
 // 4. Check if a number is even.
+/*
+  • subtract 2 with each recursive call
+  • return if n goes all the way down to zero
+  • return true or false when get down to base case(s)
+    > BC1 ==>     n === 0      ==>  true
+    > BC2 ==>     n === 1      ==>  false
+
+Recursively Calling
+↓↓↓   "level" 1       n=8   executes to line 57   calls isEven(6)
+↓↓↓       "level" 2       n=6   executes to line 57   calls isEven(4)
+↓↓↓          "level" 3       n=4   executes to line 57   calls isEven(2)
+↓↓↓              "level" 4       n=2   executes to line 57   calls isEven(0)
+
+Returning to place where called from
+↑↑↑                "level" 5       n=0   executes to line 57   returns true
+↑↑↑              "level" 4       n=2   executes to line 57   calls isEven(0)
+↑↑↑          "level" 3       n=4   executes to line 57   calls isEven(2)
+↑↑↑       "level" 2       n=6   executes to line 57   calls isEven(4)
+↑↑↑   "level" 1       n=8   executes to line 57   calls isEven(6)
+*/
+
 var isEven = function(n) {
+  if (n === 0) {
+    return true;
+  }
+  if (n === 1) {
+    return false;
+  }
+  if (n < 0) {
+    return isEven(n + 2);
+  }
+  return isEven(n - 2);
 };
 
 // 5. Sum all integers below a given integer.
-// sumBelow(10); // 45
+// sumBelow(10); // 45 = 9 + 8 + ... + 2 + 1
 // sumBelow(7); // 21
+
 var sumBelow = function(n) {
+  if (n === 0) {
+    return 0;
+  }
+  if (n < 0) {
+    return sumBelow(n + 1) + n + 1;
+  }
+  return sumBelow(n - 1) + n - 1;
+  // works if n is positive. need to make it work if n is negative!
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
+
+/*
+
+given: lower bound/upperbound, e.g., lower bound = 2, upper bound = 9
+recursive call ==> range(x + 1, y)
+base case(s) ==> x + 1 = 9
+value returned ==>
+final value returned ==>
+
+Recursively Calling
+
+  START WITH ==> range(2,9); // [3,4,5,6,7,8]
+
+  ↓↓↓   arr = []   "level" 1       calls range(3, 9)        build the array
+  ↓↓↓   arr = []       "level" 2       calls range(4, 9)
+  ↓↓↓   arr = []          "level" 3       calls range(5, 9)
+  ↓↓↓   arr = []              "level" 5       calls range(6, 9)
+  ↓↓↓   arr = []                 "level" 6       calls range(7, 9)
+  ↓↓↓   arr = []                    "level" 7       calls range(8, 9)
+
+Returning to place where called from
+
+                  range(2,9)  =====>    [3,4,5,6,7,8]
+create an empty array
+add a value to the array
+go to the next x value (recursive call range(x+1, y))
+
+*/
+// var arr = [];
+// var range = function(x, y) {
+//   // if (arr === undefined) {
+//   //   var arr = [];
+//   // }
+//   if (x + 1 === y) {
+//     return arr;
+//   }
+//   arr.push(x + 1);
+//   arr = range(x + 1, y);
+//   return arr;
+// };
+
 var range = function(x, y) {
+  var incr;
+  if (x > y) {
+    incr = -1;
+  } else {
+    incr = 1;
+  }
+  if (x === y || Math.abs(x - y) === 1) {
+    return [];
+  }
+  arr = range(x + incr, y);
+  arr.unshift(x + incr);
+  return arr;
 };
+
+// var range = function(x, y) {
+//   if (arr === undefined) {
+//     var arr = [];
+//   }
+//   if (x + 1 === y) {
+//     return arr;
+//   }
+
+//   arr = range(x + 1, y);
+//   arr.unshift(x+1);
+
+//   //console.log(arr);
+
+//   return arr;
+// };
 
 // 7. Compute the exponent of a number.
 // The exponent of a number says how many times the base number is used as a factor.
@@ -46,11 +171,46 @@ var exponent = function(base, exp) {
 // powerOfTwo(1); // true
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
+
+/*
+4 is a power of 2, because 4/2 = 2
+8 is a power of 2, because 8/2/2 = 4/2 = 2
+10 is not, because 10/2 = 5, 5/2 = 2.5/2 = 1.25
+32/2 ... 16/2... 8/2... 4/2...2
+*/
+
 var powerOfTwo = function(n) {
-};
+  if (n/2 === 2 || n === 2 || n === 1) {
+    return true;
+  }
+  if (n < 2) {
+    return false;
+  }
+  return powerOfTwo(n/2);
+ };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+  if (reversedString === undefined) {
+  	var reversedString = "";
+  }
+  if (string.length === 0) {
+    return "";
+  }
+  // add the last letter of string to reversedString
+  var minusLast = string.substring(0, string.length-1);
+  var last = string.slice(string.length-1);
+  reversedString += last;
+
+  // console.log("string: " + string);
+  // console.log("reversedString: " + reversedString);
+  // console.log("minusLast: " + minusLast);
+  // console.log("last: " + last);
+
+  // pass "stanle" back into reverse()
+  var output = reversedString + reverse(minusLast);
+  // console.log("returning: " + output)
+  return output;
 };
 
 // 10. Write a function that determines if a string is a palindrome.
