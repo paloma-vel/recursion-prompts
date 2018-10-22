@@ -7,10 +7,11 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // is 5 x factorial(4) --> 120
 var factorial = function(n) {
-  if (n < 0) { return null };
-  if (n === 1 || n === 0) { return 1 };
+  if (n < 0) { return null; }
+  if (n === 1 || n === 0) { return 1; }
   return n * factorial(n - 1);
 };
+
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
@@ -82,7 +83,7 @@ var sumBelow = function(n) {
     return sumBelow(n + 1) + n + 1;
   }
   return sumBelow(n - 1) + n - 1;
-  // works if n is positive. need to make it work if n is negative!
+
 };
 
 // 6. Get the integers within a range (x, y).
@@ -128,6 +129,19 @@ go to the next x value (recursive call range(x+1, y))
 //   return arr;
 // };
 
+/*
+    var range = function(x, y) {
+      var arr = [];
+      var incr = (x > y) ? -1 : 1;              // decrement if decreasing range | increment if increasing
+      if (x === y || Math.abs(x - y) === 1) {   // return empty array if range not given (e.g., range(6, 6)) or if base case met
+        return [];
+      }
+      arr = range(x + incr, y);
+      arr.unshift(x + incr);
+      return arr;
+    };
+*/
+
 var range = function(x, y) {
   var incr;
   if (x > y) {
@@ -159,12 +173,40 @@ var range = function(x, y) {
 //   return arr;
 // };
 
+/*
+      • The base case is when n = 0, and x^0 = 1.
+
+      • If n is positive and even, recursively compute y = x^(n / 2),
+        and then x to the n = y * y. Notice that you can get away with
+        making just one recursive call in this case, computing x^(n/2)
+        just once, and then you multiply the result of this recursive
+        call by itself.
+
+      • If n is positive and odd, recursively compute x^(n-1), so
+        that the exponent either is 0 or is positive and even. Then,
+        x^n = x^(n-1)*x.
+
+      • If n is negative, recursively compute x^(-n), so that the
+        exponent becomes positive. Then, x^n = 1/(x^-n)
+*/
 // 7. Compute the exponent of a number.
 // The exponent of a number says how many times the base number is used as a factor.
 // 8^2 = 8 x 8 = 64. Here, 8 is the base and 2 is the exponent.
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+  if (exp === 0) { // base case
+    return 1;
+  }
+  if ((exp > 0) && (exp % 2 === 0)) { // if exp is pos. & even
+    return exponent(base, exp/2) * exponent(base, exp/2);
+  }
+  if ((exp > 0) && (exp % 2 !== 0)) { // if exp is pos. & odd
+    return exponent(base, exp-1) * base;
+  }
+  if (exp < 0) { // if n is neg.
+    return 1/(exponent(base, -exp));
+  }
 };
 
 // 8. Determine if a number is a power of two.
@@ -177,6 +219,18 @@ var exponent = function(base, exp) {
 8 is a power of 2, because 8/2/2 = 4/2 = 2
 10 is not, because 10/2 = 5, 5/2 = 2.5/2 = 1.25
 32/2 ... 16/2... 8/2... 4/2...2
+
+    var powerOfTwo = function(n) {
+      if (n >= 2) {
+        return powerOfTwo(n / 2);
+      }
+      if (n === 1) {
+        return true;
+      } else if (n < 2) {
+        return false;
+      }
+    };
+
 */
 
 var powerOfTwo = function(n) {
@@ -190,9 +244,17 @@ var powerOfTwo = function(n) {
  };
 
 // 9. Write a function that reverses a string.
+/*
+    var reverse = function(string) {
+      if (string.length === 0) {
+        return '';
+      }
+      return string.slice(-1) + reverse(string.slice(0, string.length -1));
+    };
+*/
 var reverse = function(string) {
   if (reversedString === undefined) {
-  	var reversedString = "";
+    var reversedString = "";
   }
   if (string.length === 0) {
     return "";
@@ -220,10 +282,43 @@ var palindrome = function(string) {
 // 11. Write a function that returns the remainder of x divided by y without using the
 // modulo (%) operator.
 // modulo(5,2) // 1
+//  x - y     z
+//  5 - 2     3
+//  3 - 2     1
+//  1 - 2    NEGATIVE
+
+//  x - y     z
+// 15 - 5    10
+// 10 - 5     5
+// 5  - 5     0      ---> remainder is 0, because I cannot divide again without getting a decimal
+
+//  x - y     z
+// 16 - 5    11
+// 11 - 5    6
+// 6  - 5    1       ---> remainder is 1, because I cannot divide again without getting a decimal
+
+//  x - y     z
+// 19 - 5    14
+// 14 - 5     9
+//  9 - 5     4      ---> remainder is 4, because I cannot divide again without getting a decimal
+
+//  5 - 2 ---> 3 --> k
+//  3 - 2 ---> 1 --> remainder is whatever is left over when x falls below y
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+  // x - y, until the next subtraction would result in a negative or decimal number
+
+  // base case: neg or dec.
+
+  // var x-y = z;
+  if ((x < 0) || (Number.isInteger(z))) { // if y > x
+    return z;
+  }
+
+  return z - modulo(x, y);
 };
+
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
