@@ -277,7 +277,25 @@ var reverse = function(string) {
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
-};
+  string = string.toLowerCase();
+  if (string.length === 0 || string.length === 1) {
+    return true;
+  }
+  var first = string[0];
+  var last = string[string.length-1];
+  //console.log("first: " + first + " | last: " + last)
+
+  if (first === last) {
+    return palindrome(string.slice(1, string.length-1))
+  }
+  return false;
+}
+
+// palindrome("racecar")
+// palindrome("aceca")
+// palindrome("cec")
+// palindrome("e")
+
 
 // 11. Write a function that returns the remainder of x divided by y without using the
 // modulo (%) operator.
@@ -285,7 +303,7 @@ var palindrome = function(string) {
 //  x - y     z
 //  5 - 2     3
 //  3 - 2     1
-//  1 - 2    NEGATIVE
+//  1 - 2    -1 (stop!)
 
 //  x - y     z
 // 15 - 5    10
@@ -304,19 +322,27 @@ var palindrome = function(string) {
 
 //  5 - 2 ---> 3 --> k
 //  3 - 2 ---> 1 --> remainder is whatever is left over when x falls below y
+
 // modulo(17,5) // 2
 // modulo(22,6) // 4
+
+// x - y, until the next subtraction would result in zero or a negative-or-decimal number
+
+// works for positive numbers:
 var modulo = function(x, y) {
-  // x - y, until the next subtraction would result in a negative or decimal number
 
-  // base case: neg or dec.
-
-  // var x-y = z;
-  if ((x < 0) || (Number.isInteger(z))) { // if y > x
-    return z;
+  var minusY = x-y;
+  if (y === 0) {
+    return NaN;
   }
-
-  return z - modulo(x, y);
+  if (x === y) {
+    return 0;
+  }
+  if (minusY < 0) {
+    return minusY + y;
+  }
+  return modulo(minusY, y);
+  
 };
 
 
