@@ -328,28 +328,42 @@ var palindrome = function(string) {
 
 // x - y, until the next subtraction would result in zero or a negative-or-decimal number
 
-// works for positive numbers:
 var modulo = function(x, y) {
-
-  var minusY = x-y;
+  var minusY = x - y;
   if (y === 0) {
     return NaN;
   }
-  if (x === y) {
+  if (x === 0 || x === y) {
     return 0;
   }
-  if (minusY < 0) {
-    return minusY + y;
+  if (y < 0) { 
+   return modulo(x, -y); 
+  }
+  if (x < 0) { 
+   return -modulo(-x, y); 
+  }
+  if (y > x) { 
+   return  x;
   }
   return modulo(minusY, y);
-  
 };
 
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+  if (x === 0 || y === 0) {
+    return 0;
+  }
+  // if ((x < 0 && y > 0) || (x > 0 && y < 0)) {
+  if (x < 0 || y < 0) {
+    return -x + multiply(x, y+1)
+  }
+  if (x > 0 && y > 0 || x < 0 && y < 0) {
+    return x + multiply(x, y-1);
+  }
 };
+
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
@@ -369,6 +383,17 @@ var gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+  var first1 = str1[0];
+  var first2 = str2[0];
+
+  if (first1 === first2) {
+    if (str1.length === 0 && str2.length === 0) {
+      return true;
+    }
+    return compareStr(str1.slice(1, str1.length), str2.slice(1, str2.length))
+  }
+  return false;
+
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
